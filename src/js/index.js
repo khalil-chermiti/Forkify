@@ -2,8 +2,14 @@
 
 // imports
 import {elements , renderLoader , clearLoader} from "./view/base";
+
 import searchModel from "./model/searchModel";
 import * as searchView from "./view/searchView";
+ 
+import Recipe from "./model/recipeModel" ;
+import * as recipeView from './view/recipeView' ;
+
+//////// search controller ///////////
 
 // the app state  
 let state = {};
@@ -21,13 +27,18 @@ const searchController = async () => {
     searchView.clearResults();
     searchView.clearInput();
     renderLoader(elements.results)
+    try {
+      
+      // get the results
+      await state.search.getResults();
+      clearLoader(elements.results)
+  
+      // render the results
+      searchView.renderRecipes(state.search.results);
 
-    // get the results
-    await state.search.getResults();
-    clearLoader(elements.results)
-
-    // render the results
-    searchView.renderRecipes(state.search.results);
+    }catch {
+      clearLoader() ;
+    }
   }
 };
 
@@ -55,3 +66,43 @@ elements.resultsPages.addEventListener('click' , (event) => {
   }
   
 })
+
+
+//////// recipe controller /////////////
+
+const recipeController = async () => {
+  // getting the recipe id from the window adress 
+  const id = window.location.hash.replace('#' , '');
+  
+  if (id) {
+    
+    // create the recipe object
+    state.recipe = new Recipe(id);
+    
+    try {
+      // prepare the UI for changes 
+      recipeView.clearRecipe() ;
+      renderLoader(elements.recipe);
+
+      // get the recipe data and parse it 
+      await state.recipe.getRecipeData() ;
+      state.recipe.parseIng() ; 
+
+      // calculate time and servings 
+      state.recipe.calcTime() ;
+      state.recipe.calcServings() ;
+
+      // render the recipe 
+      clearLoader() ;
+      recipeView.renderRecipe(state.recipe) ;
+
+    } catch(err) {
+      console.log('error while loading the the recipe' , err ) ;
+    }
+  }
+}
+
+// invoke the recipe controller when the adress hash changes 
+window.addEventListener('hashchange' , recipeController) ;
+// invoke the recipe controller when the page reloads 
+window.addEventListener('load' , recipeController) ;
