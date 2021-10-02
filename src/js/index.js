@@ -73,7 +73,6 @@ elements.resultsPages.addEventListener('click' , (event) => {
 const recipeController = async () => {
   // getting the recipe id from the window adress 
   const id = window.location.hash.replace('#' , '');
-
   if (id) searchView.formatSelected(id) ;
   
   if (id) {
@@ -108,3 +107,22 @@ const recipeController = async () => {
 window.addEventListener('hashchange' , recipeController) ;
 // invoke the recipe controller when the page reloads 
 window.addEventListener('load' , recipeController) ;
+
+// handling recipe buttons 
+
+elements.recipe.addEventListener('click' , e => {
+
+  if (e.target.matches('.btn-decrease , .btn-decrease *')) {
+    // decrease servings 
+
+      state.recipe.updateServings('dec') ;
+      recipeView.updateServingsIngredients(state.recipe) ;
+    
+  }else if (e.target.matches('.btn-increase , .btn-increase *')) {
+    // decrease servings 
+    state.recipe.updateServings('inc')  ;
+    recipeView.updateServingsIngredients(state.recipe) ;
+  }
+
+  console.log(state) ;
+})

@@ -95,4 +95,16 @@ export default class Recipe {
         
         this.ing = newIng ;
     }
+
+    // update the Servings 
+    updateServings = (type) => {
+        // servings 
+        let newServings = type === 'dec' ? this.servings -1 : this.servings +1 ;
+
+        // ingredients 
+
+        this.ing.forEach(ing => ing.count *= (newServings / this.servings)) ;
+
+        this.servings = newServings ;
+    }
 }
