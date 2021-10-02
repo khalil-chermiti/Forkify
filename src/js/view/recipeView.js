@@ -1,4 +1,5 @@
 import {elements , renderLoader , clearLoader} from './base' ;
+import {Fraction} from 'fractional' ;
 
 
 // render the recipe 
@@ -50,65 +51,7 @@ export const renderRecipe = (recipe) => {
 
         <div class="recipe__ingredients">
             <ul class="recipe__ingredient-list">
-                ${
-                    recipe.ing.forEach(el => createIngredient(el))
-                }
-
-                <li class="recipe__item">
-                    <svg class="recipe__icon">
-                        <use href="img/icons.svg#icon-check"></use>
-                    </svg>
-                    <div class="recipe__count">1/2</div>
-                    <div class="recipe__ingredient">
-                        <span class="recipe__unit">cup</span>
-                        ricotta cheese
-                    </div>
-                </li>
-
-                <li class="recipe__item">
-                    <svg class="recipe__icon">
-                        <use href="img/icons.svg#icon-check"></use>
-                    </svg>
-                    <div class="recipe__count">1</div>
-                    <div class="recipe__ingredient">
-                        <span class="recipe__unit"></span>
-                        can of tomatoes, whole or crushed
-                    </div>
-                </li>
-
-
-                <li class="recipe__item">
-                    <svg class="recipe__icon">
-                        <use href="img/icons.svg#icon-check"></use>
-                    </svg>
-                    <div class="recipe__count">1</div>
-                    <div class="recipe__ingredient">
-                        <span class="recipe__unit"></span>
-                        can tuna packed in olive oil
-                    </div>
-                </li>
-
-                <li class="recipe__item">
-                    <svg class="recipe__icon">
-                        <use href="img/icons.svg#icon-check"></use>
-                    </svg>
-                    <div class="recipe__count">1/2</div>
-                    <div class="recipe__ingredient">
-                        <span class="recipe__unit">cup</span>
-                        grated parmesan cheese
-                    </div>
-                </li>
-
-                <li class="recipe__item">
-                    <svg class="recipe__icon">
-                        <use href="img/icons.svg#icon-check"></use>
-                    </svg>
-                    <div class="recipe__count">1/4</div>
-                    <div class="recipe__ingredient">
-                        <span class="recipe__unit">cup</span>
-                        fresh basil, chopped or torn
-                    </div>
-                </li>
+                ${recipe.ing.map(el => createIngredient(el)).join('')}
             </ul>
 
             <button class="btn-small recipe__btn">
@@ -137,22 +80,45 @@ export const renderRecipe = (recipe) => {
 
     elements.recipe.innerHTML = markup ;
 }
+// format the count into fractions
+
+const formatCount = (count) => {
+    if (count) {
+        // count == 2.5 ==> 2 1/2
+        // count == 0.5 ==> 1/2 
+        // destructuring int and dec out of count 
+        const [int , dec] = count.toString().split('.').map(el => parseInt(el , 10)) ;
+
+        if (!dec) return count ;
+
+        if (int === 0 ) {
+            const fr = new Fraction(count) ;
+            return `${fr.numerator}/${fr.denominator}` ;
+        } else {
+            const fr = new Fraction(count - int) ;
+            return `${int} ${fr.numerator}/${fr.denominator}` ;
+        }
+
+    }
+    return '?' ;
+}
+
 
 // create the ingredient markup 
-const createIngredient = (el) => {
-    return
-    `<li class="recipe__item">
+const createIngredient = (ing) => {
+    return`
+    <li class="recipe__item">
         <svg class="recipe__icon">
             <use href="img/icons.svg#icon-check"></use>
         </svg>
-        <div class="recipe__count">${el.count}</div>
+        <div class="recipe__count">${formatCount(ing.count)}</div>
         <div class="recipe__ingredient">
-            <span class="recipe__unit">${el.unit}</span>
-            ${el.ingredient}
+            <span class="recipe__unit">${ing.unit}</span>
+            ${ing.ingredient}
         </div>
-    </li>` 
-};
-
+    </li>
+    `
+} ;
 // clear the UI 
 export const clearRecipe = () => elements.recipe.innerHTML = '' ;
 

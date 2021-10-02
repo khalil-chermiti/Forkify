@@ -93,6 +93,6 @@ export default class Recipe {
             return objIng ; 
         })
         
-        this.ing = newIng ; 
+        this.ing = newIng ;
     }
 }
