@@ -73,6 +73,8 @@ elements.resultsPages.addEventListener('click' , (event) => {
 const recipeController = async () => {
   // getting the recipe id from the window adress 
   const id = window.location.hash.replace('#' , '');
+
+  if (id) searchView.formatSelected(id) ;
   
   if (id) {
     

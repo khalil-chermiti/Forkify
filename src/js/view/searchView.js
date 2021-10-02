@@ -11,7 +11,11 @@ export const clearResults = () => {
     elements.resultsList.innerHTML = '' ;
     elements.resultsPages.innerHTML = '';
 }
-
+export const formatSelected = (id) => {
+    const resultsArr = Array.from(document.querySelectorAll(".results__link")) ;
+    resultsArr.forEach(el => el.classList.remove('results__link--active')) ;
+    document.querySelector(`a[href="#${id}"]`).classList.add("results__link--active") ;
+}
 // format recipe titles  
 
 const formatTitle = (title , limit = 17) => {
