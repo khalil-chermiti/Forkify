@@ -6,7 +6,9 @@ export const elements = {
     results : document.querySelector('.results') ,
     resultsPages : document.querySelector('.results__pages') ,
     recipe : document.querySelector('.recipe') ,
-    list : document.querySelector('.shopping__list')
+    list : document.querySelector('.shopping__list') ,
+    likesMenu : document.querySelector('.likes__field') ,
+    likesList : document.querySelector('.likes__list')
 } ;
 
 // elements
