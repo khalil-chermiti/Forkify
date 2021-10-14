@@ -99,6 +99,7 @@ export default class Recipe {
     // update the Servings 
     updateServings = (type) => {
         // servings 
+        if (this.servings > 1 || (type === "inc")) {
         let newServings = type === 'dec' ? this.servings -1 : this.servings +1 ;
 
         // ingredients 
@@ -106,5 +107,6 @@ export default class Recipe {
         this.ing.forEach(ing => ing.count *= (newServings / this.servings)) ;
 
         this.servings = newServings ;
+        }
     }
 }

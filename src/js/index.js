@@ -9,10 +9,14 @@ import * as searchView from "./view/searchView";
 import Recipe from "./model/recipeModel" ;
 import * as recipeView from './view/recipeView' ;
 
+import List from './model/listModel';
+import * as listView from './view/listView';
+
 //////// search controller ///////////
 
 // the app state  
 let state = {};
+window.state = state ;
 
 const searchController = async () => {
 
@@ -108,6 +112,41 @@ window.addEventListener('hashchange' , recipeController) ;
 // invoke the recipe controller when the page reloads 
 window.addEventListener('load' , recipeController) ;
 
+//////// list controller /////////////
+
+const listController = () => {
+  // add new list if there is none 
+  if (!state.list) {
+    state.list = new List() ;
+  }
+
+  // add item to the list 
+  state.recipe.ing.forEach(el => {
+    const item =  state.list.addItem(el.count , el.unit , el.ingredient) 
+    listView.renderItem(item) ; 
+  }) ;
+}
+
+// handling delete and update item list buttons 
+elements.list.addEventListener('click' , event => {
+  const id = event.target.closest('.shopping__item').dataset.itemid;
+  window.id = id ;
+   // handle the delete button 
+  if (event.target.matches('.shopping__delete , .shopping__delete *')) {
+    // delete item from state 
+    state.list.deleteItem(id) ; 
+    // delete item from UI
+    listView.removeItem(id) ;
+  } else if (event.target.matches('.shopping__count-value')) {
+
+    //getting the new value from the input field
+    const val = parseFloat(event.target.value , 10) ;
+    
+    console.log(val) ;
+    state.list.updateCount(id , val) ;
+  }
+
+})
 // handling recipe buttons 
 
 elements.recipe.addEventListener('click' , e => {
@@ -119,10 +158,13 @@ elements.recipe.addEventListener('click' , e => {
       recipeView.updateServingsIngredients(state.recipe) ;
     
   }else if (e.target.matches('.btn-increase , .btn-increase *')) {
-    // decrease servings 
+    // increase servings 
     state.recipe.updateServings('inc')  ;
     recipeView.updateServingsIngredients(state.recipe) ;
-  }
 
-  console.log(state) ;
+  }else if (e.target.matches('.recipe__btn--add , .recipe__btn--add *')){
+
+    // adding ingredients to the list
+    listController() ;
+  }
 })

@@ -14,7 +14,10 @@ export const clearResults = () => {
 export const formatSelected = (id) => {
     const resultsArr = Array.from(document.querySelectorAll(".results__link")) ;
     resultsArr.forEach(el => el.classList.remove('results__link--active')) ;
-    document.querySelector(`a[href="#${id}"]`).classList.add("results__link--active") ;
+
+    //chack if there is an item
+    if (document.querySelector(`a[href="#${id}"]`)) 
+        document.querySelector(`a[href="#${id}"]`).classList.add("results__link--active") ;
 }
 // format recipe titles  
 
