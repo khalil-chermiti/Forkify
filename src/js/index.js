@@ -135,8 +135,22 @@ const listController = () => {
 
 // ! likes controller 
 
-if (!state.likes) state.likes = new Likes(); 
-likesView.toggleLikeMenu(state.likes.getNumLikes()) ;
+// restore recipies on page load 
+
+window.addEventListener('load' , () => {
+
+  // creating a new state if none 
+  if (!state.likes) state.likes = new Likes(); 
+
+  // restoring liked recipies 
+  state.likes.readStorage(); 
+  
+  // toggle like menu if there are liked recipies 
+  likesView.toggleLikeMenu(state.likes.likes.length) ;
+
+  //render existing likes 
+  state.likes.likes.forEach(like => likesView.renderLike(like)) ;
+})
 
 const likesController = () => { 
 
@@ -158,7 +172,6 @@ const likesController = () => {
     likesView.toggleLikeBtn(true) ;
 
     // render the liked recipe 
-    console.log(newLike);
     likesView.renderLike(newLike) ;
 
     }else {
@@ -191,7 +204,6 @@ elements.list.addEventListener('click' , event => {
     //getting the new value from the input field
     const val = parseFloat(event.target.value , 10) ;
     
-    console.log(val) ;
     state.list.updateCount(id , val) ;
   }
 
