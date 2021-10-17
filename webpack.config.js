@@ -1,16 +1,16 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-let mode = process.env.NODE_ENV === "production" ? "poduction" : "development";
+let mode = process.env.NODE_ENV === "production" ? "production" : "development";
 
 module.exports = {
   mode,
   entry: "./src/js/index.js",
   output: {
-    filename: "js/bundle.js",
     path: path.resolve(__dirname, "dist"),
-    // publicPath : '/css/' ,
-    clean: true,
+    filename: "js/bundle.js",
+    // this clean will delete everything in the dist folder (our assets XD) ; be careful!!
+    // clean: true,
   },
   devServer: {
     static: {
